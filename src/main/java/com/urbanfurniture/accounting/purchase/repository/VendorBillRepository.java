@@ -10,6 +10,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface VendorBillRepository extends JpaRepository<VendorBill, Long> {
+    Optional<VendorBill> findByPurchaseOrderId(Long purchaseOrderId);
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select bill from VendorBill bill where bill.id = :id")
     Optional<VendorBill> findByIdForUpdate(@Param("id") Long id);
