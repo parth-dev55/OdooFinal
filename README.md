@@ -103,3 +103,50 @@ Accounting engine
  ↓
 Reports
 
+Frontend:
+Forms
+Tables
+Buttons
+Filters
+Dashboard
+Charts
+Reports UI
+Validation messages
+Backend:
+Authentication
+Permissions
+Tax calculation
+Debit/Credit
+Ledger updates
+Stock updates
+Journal creation
+Report calculations
+Database
+
+                    PROBLEM
+                       ↓
+    Accounting process ko end-to-end
+    accurately manage karna
+                       ↓
+              WHO HAS PROBLEM?
+                       ↓
+      Business Owner + Accountant
+          + Customers/Contacts
+                       ↓
+                 WHY?
+                       ↓
+   Sales, purchases, payments, taxes,
+   ledgers aur reports interconnected hain
+                       ↓
+            WHO WILL USE IT?
+                       ↓
+       Admin / Accountant / Contact
+                       ↓
+        WHAT ARE WE SOLVING?
+                       ↓
+ Master Data → Transaction → Payment
+ → Accounting Entry → Reporting
+                       ↓
+          UNIQUE SOLUTION
+                       ↓
+     Integrated Accounting Automation
