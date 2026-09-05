@@ -35,6 +35,16 @@ public class AuthController {
         return ResponseEntity.ok(authService.getProfile(firebaseUid));
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<AuthMeResponse> login(Authentication authentication) {
+        if (authentication == null || authentication.getPrincipal() == null) {
+            log.warn("POST /api/auth/login reached without an authenticated principal");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        String firebaseUid = authentication.getPrincipal().toString();
+        return ResponseEntity.ok(authService.getProfile(firebaseUid));
+    }
+
     @PostMapping("/profile")
     public ResponseEntity<AuthMeResponse> createProfile(
             Authentication authentication,
