@@ -21,6 +21,41 @@ View your app in AI Studio: https://ai.studio/apps/7823b315-16df-47e7-bedf-b4b77
 We are here to win
 ![Uploading image.png…]()
 
+## Backend database setup
+
+The backend uses Spring Boot JPA with MySQL. Create the database once, then set
+`DB_URL`, `DB_USERNAME`, and `DB_PASSWORD` in the backend process environment
+before starting the application:
+
+```sql
+CREATE DATABASE urban_furniture_erp
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+```
+
+```powershell
+$env:DB_URL = "jdbc:mysql://localhost:3306/urban_furniture_erp?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
+$env:DB_USERNAME = "root"
+$env:DB_PASSWORD = "your-mysql-password"
+.\backend\mvnw.cmd -f backend\pom.xml spring-boot:run
+```
+
+For Firebase bearer-token verification, configure the backend separately:
+
+```powershell
+$env:FIREBASE_ENABLED = "true"
+$env:FIREBASE_PROJECT_ID = "your-firebase-project-id"
+$env:FIREBASE_SERVICE_ACCOUNT_JSON = (Get-Content .\firebase-service-account.json -Raw)
+```
+
+Never commit the service-account JSON or database password. When Firebase is
+disabled, the backend retains its development Spring Security authentication;
+when enabled, Firebase bearer tokens are verified and `/api/auth/me` plus
+`/api/auth/profile` are available for the frontend.
+
+On startup, Hibernate uses `spring.jpa.hibernate.ddl-auto=update` to create or
+update the entity tables. Do not commit real database credentials.
+
 SCREEN :
 
 /login

@@ -4,7 +4,7 @@ export interface UserProfile {
   id: string;
   name: string;
   email: string;
-  role: 'ADMIN' | 'ACCOUNTANT' | 'CONTACT';
+  role: 'ADMIN' | 'ACCOUNTANT' | 'CUSTOMER';
 }
 
 export const authService = {
