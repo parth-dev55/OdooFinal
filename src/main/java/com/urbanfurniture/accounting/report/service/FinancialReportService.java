@@ -51,6 +51,8 @@ public class FinancialReportService {
         BigDecimal assets = BigDecimal.ZERO;
         BigDecimal liabilities = BigDecimal.ZERO;
         BigDecimal capital = BigDecimal.ZERO;
+        BigDecimal income = BigDecimal.ZERO;
+        BigDecimal expenses = BigDecimal.ZERO;
         for (JournalEntry entry : postedEntries(range)) {
             for (JournalEntryLine line : entry.getLines()) {
                 String code = line.getAccount().getCode();
@@ -59,8 +61,11 @@ public class FinancialReportService {
                 if (startsWith(code, '1')) assets = assets.add(debit.subtract(credit));
                 if (startsWith(code, '2')) liabilities = liabilities.add(credit.subtract(debit));
                 if (startsWith(code, '3')) capital = capital.add(credit.subtract(debit));
+                if (isIncome(line)) income = income.add(credit.subtract(debit));
+                if (isExpense(line)) expenses = expenses.add(debit.subtract(credit));
             }
         }
+        capital = capital.add(income.subtract(expenses));
         return new BalanceSheetResponse(range.start(), range.end(), money(assets), money(liabilities), money(capital));
     }
 

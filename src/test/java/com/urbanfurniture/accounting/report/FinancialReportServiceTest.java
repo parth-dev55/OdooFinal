@@ -42,7 +42,8 @@ class FinancialReportServiceTest {
         assertEquals(new BigDecimal("600.00"), profitLoss.netProfit());
         assertEquals(new BigDecimal("600.00"), balance.assets());
         assertEquals(new BigDecimal("0.00"), balance.liabilities());
-        assertEquals(new BigDecimal("0.00"), balance.capital());
+        assertEquals(new BigDecimal("600.00"), balance.capital());
+        assertEquals(balance.assets(), balance.liabilities().add(balance.capital()));
     }
 
     private JournalEntry entry(JournalEntryStatus status, LocalDate date, JournalEntryLine... lines) {

@@ -1,6 +1,7 @@
 package com.urbanfurniture.accounting.purchase.entity;
 
 import com.urbanfurniture.accounting.contact.entity.Contact;
+import com.urbanfurniture.accounting.accounting.entity.JournalEntry;
 import com.urbanfurniture.accounting.payment.enums.SettlementStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,4 +41,7 @@ public class VendorBill {
     private BigDecimal outstandingAmount;
     @Enumerated(EnumType.STRING) @Column(nullable = false, length = 20)
     private SettlementStatus status = SettlementStatus.OPEN;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "journal_entry_id", unique = true)
+    private JournalEntry journalEntry;
 }
