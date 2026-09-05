@@ -8,8 +8,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
+import java.math.BigDecimal;
 
 public interface CustomerInvoiceRepository extends JpaRepository<CustomerInvoice, Long> {
+    @Query("select coalesce(sum(invoice.totalAmount), 0) from CustomerInvoice invoice")
+    BigDecimal sumTotalAmount();
+
+    @Query("select coalesce(sum(invoice.outstandingAmount), 0) from CustomerInvoice invoice")
+    BigDecimal sumOutstandingAmount();
+
     java.util.Optional<CustomerInvoice> findBySalesOrderId(Long salesOrderId);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)

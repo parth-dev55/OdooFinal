@@ -9,6 +9,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
+    long countByActiveTrue();
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select p from Product p where p.id = :id")
     java.util.Optional<Product> findByIdForUpdate(@Param("id") Long id);
