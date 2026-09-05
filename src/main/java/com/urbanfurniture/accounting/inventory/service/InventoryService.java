@@ -55,6 +55,15 @@ public class InventoryService {
     }
 
     @Transactional(readOnly = true)
+    public void ensureAvailable(Long productId, BigDecimal quantity) {
+        productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product " + productId + " was not found"));
+        if (calculateCurrentStock(productId).compareTo(quantity) < 0) {
+            throw new InventoryValidationException("Insufficient stock for product " + productId);
+        }
+    }
+
+    @Transactional(readOnly = true)
     public StockResponse getCurrentStock(Long productId) {
         ensureProductExists(productId);
         return new StockResponse(productId, calculateCurrentStock(productId));

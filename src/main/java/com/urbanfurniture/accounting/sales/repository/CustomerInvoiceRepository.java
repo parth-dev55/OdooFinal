@@ -10,6 +10,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface CustomerInvoiceRepository extends JpaRepository<CustomerInvoice, Long> {
+    java.util.Optional<CustomerInvoice> findBySalesOrderId(Long salesOrderId);
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select invoice from CustomerInvoice invoice where invoice.id = :id")
     Optional<CustomerInvoice> findByIdForUpdate(@Param("id") Long id);
