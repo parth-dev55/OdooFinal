@@ -25,8 +25,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/api/auth/**").authenticated()
-                        .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/api/health").permitAll()
+                        .requestMatchers("/api/**").authenticated()
                         .anyRequest().denyAll())
                 .addFilterBefore(firebaseAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exceptions -> exceptions
