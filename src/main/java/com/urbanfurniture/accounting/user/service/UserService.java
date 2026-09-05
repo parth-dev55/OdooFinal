@@ -30,6 +30,9 @@ public class UserService {
         user.setEmail(email);
         user.setRole(request.role());
         user.setActive(request.active() == null || request.active());
+        if (request.firebaseUid() != null && !request.firebaseUid().isBlank()) {
+            user.setFirebaseUid(request.firebaseUid().trim());
+        }
         return toResponse(userRepository.save(user));
     }
 
@@ -62,6 +65,9 @@ public class UserService {
         }
         if (request.active() != null) {
             user.setActive(request.active());
+        }
+        if (request.firebaseUid() != null) {
+            user.setFirebaseUid(request.firebaseUid().trim().isEmpty() ? null : request.firebaseUid().trim());
         }
 
         return toResponse(userRepository.save(user));
