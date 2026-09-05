@@ -1,0 +1,6 @@
+{
+  "name": "Urban ERP",
+  "description": "Comprehensive cloud ERP and accounting suite for managing master data, contacts, transactions, and financials.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
