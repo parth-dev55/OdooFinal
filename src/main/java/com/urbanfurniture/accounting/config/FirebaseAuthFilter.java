@@ -32,7 +32,7 @@ public class FirebaseAuthFilter extends OncePerRequestFilter {
 
         String authHeader = request.getHeader("Authorization");
         boolean hasAuthorizationHeader = authHeader != null && !authHeader.isBlank();
-        log.info("Authorization header present: {}", hasAuthorizationHeader);
+        log.info("Authorization header present for {}: {}", request.getRequestURI(), hasAuthorizationHeader);
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7).trim();
