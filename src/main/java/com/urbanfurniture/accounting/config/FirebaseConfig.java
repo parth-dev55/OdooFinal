@@ -22,6 +22,9 @@ public class FirebaseConfig {
     @Value("${firebase.service-account.path:}")
     private String configuredPath;
 
+    @Value("${firebase.project-id:odoo-4116c}")
+    private String projectId;
+
     @PostConstruct
     public void initialize() {
         if (!FirebaseApp.getApps().isEmpty()) {
@@ -38,6 +41,7 @@ public class FirebaseConfig {
 
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccountStream))
+                    .setProjectId(projectId)
                     .setHttpTransport(new NetHttpTransport())
                     .build();
 
