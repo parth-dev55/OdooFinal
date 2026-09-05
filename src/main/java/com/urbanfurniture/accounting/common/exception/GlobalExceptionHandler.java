@@ -2,6 +2,7 @@ package com.urbanfurniture.accounting.common.exception;
 
 import com.urbanfurniture.accounting.common.response.ApiError;
 import com.urbanfurniture.accounting.accounting.exception.AccountingValidationException;
+import com.urbanfurniture.accounting.inventory.exception.InventoryValidationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AccountingValidationException.class)
     ResponseEntity<ApiError> handleAccountingValidation(AccountingValidationException exception) {
+        return error(HttpStatus.BAD_REQUEST, exception.getMessage());
+    }
+
+    @ExceptionHandler(InventoryValidationException.class)
+    ResponseEntity<ApiError> handleInventoryValidation(InventoryValidationException exception) {
         return error(HttpStatus.BAD_REQUEST, exception.getMessage());
     }
 
