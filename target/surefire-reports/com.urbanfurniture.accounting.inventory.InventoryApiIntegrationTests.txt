@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.urbanfurniture.accounting.inventory.InventoryApiIntegrationTests
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.241 s -- in com.urbanfurniture.accounting.inventory.InventoryApiIntegrationTests
