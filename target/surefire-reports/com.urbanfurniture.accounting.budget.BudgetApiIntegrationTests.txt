@@ -1,0 +1,12 @@
+-------------------------------------------------------------------------------
+Test set: com.urbanfurniture.accounting.budget.BudgetApiIntegrationTests
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 8.250 s <<< FAILURE! -- in com.urbanfurniture.accounting.budget.BudgetApiIntegrationTests
+com.urbanfurniture.accounting.budget.BudgetApiIntegrationTests.rejectsInvalidBudgetRangeAndAmount -- Time elapsed: 0.015 s <<< FAILURE!
+java.lang.AssertionError: Status expected:<400> but was:<403>
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:62)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:129)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$0(StatusResultMatchers.java:600)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:212)
+	at com.urbanfurniture.accounting.budget.BudgetApiIntegrationTests.rejectsInvalidBudgetRangeAndAmount(BudgetApiIntegrationTests.java:83)
+
