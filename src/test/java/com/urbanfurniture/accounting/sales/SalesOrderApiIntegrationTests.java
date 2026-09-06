@@ -18,13 +18,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
+@org.springframework.security.test.context.support.WithMockUser(roles = "ADMIN")
 class SalesOrderApiIntegrationTests {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    @org.springframework.security.test.context.support.WithMockUser
     void createsConfirmsAndRetrievesSalesOrderWithInvoice() throws Exception {
         long customerId = createCustomer();
         long productId = createProduct();
