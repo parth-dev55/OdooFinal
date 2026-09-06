@@ -2,6 +2,8 @@ package com.urbanfurniture.accounting.user.controller;
 
 import com.urbanfurniture.accounting.user.dto.AuthMeResponse;
 import com.urbanfurniture.accounting.user.dto.CreateProfileRequest;
+import com.urbanfurniture.accounting.user.dto.LoginRequest;
+import com.urbanfurniture.accounting.user.dto.LoginResponse;
 import com.urbanfurniture.accounting.user.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,18 +33,12 @@ public class AuthController {
             log.warn("GET /api/auth/me reached without an authenticated principal");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        String firebaseUid = authentication.getPrincipal().toString();
-        return ResponseEntity.ok(authService.getProfile(firebaseUid));
+        return ResponseEntity.ok(authService.getProfile(authentication.getName()));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthMeResponse> login(Authentication authentication) {
-        if (authentication == null || authentication.getPrincipal() == null) {
-            log.warn("POST /api/auth/login reached without an authenticated principal");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        String firebaseUid = authentication.getPrincipal().toString();
-        return ResponseEntity.ok(authService.getProfile(firebaseUid));
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+        return ResponseEntity.ok(authService.login(request));
     }
 
     @PostMapping("/profile")
@@ -53,7 +49,7 @@ public class AuthController {
             log.warn("POST /api/auth/profile reached without an authenticated principal");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        String firebaseUid = authentication.getPrincipal().toString();
-        return ResponseEntity.ok(authService.createOrLinkProfile(firebaseUid, request));
+        String identity = authentication.getName();
+        return ResponseEntity.ok(authService.createOrLinkProfile(identity, request));
     }
 }

@@ -11,17 +11,53 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import com.urbanfurniture.accounting.config.JwtService;
+import com.urbanfurniture.accounting.user.dto.LoginRequest;
+import com.urbanfurniture.accounting.user.dto.LoginResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Locale;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class AuthService {
 
     private static final Logger log = LoggerFactory.getLogger(AuthService.class);
 
     private final UserRepository userRepository;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+
+    public AuthService(UserRepository userRepository) {
+        this(userRepository, null, null);
+    }
+
+    @Autowired
+    public AuthService(UserRepository userRepository,
+                       AuthenticationManager authenticationManager,
+                       JwtService jwtService) {
+        this.userRepository = userRepository;
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
+    }
+
+    @Transactional(readOnly = true)
+    public LoginResponse login(LoginRequest request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.email().trim().toLowerCase(Locale.ROOT), request.password()));
+        User user = userRepository.findByEmailIgnoreCase(request.email().trim())
+                .orElseThrow(() -> new ResourceNotFoundException("Invalid credentials"));
+        UserDetails details = org.springframework.security.core.userdetails.User
+                .withUsername(user.getEmail())
+                .password(user.getPassword())
+                .roles(user.getRole().name())
+                .build();
+        String token = jwtService.generateToken(details, user.getId(), user.getRole().name());
+        return new LoginResponse(token, "Bearer", toAuthResponse(user));
+    }
 
     @Transactional(readOnly = true)
     public AuthMeResponse getProfile(String firebaseUid) {
@@ -30,6 +66,9 @@ public class AuthService {
         }
 
         Optional<User> userByUid = userRepository.findByFirebaseUid(firebaseUid);
+        if (userByUid.isEmpty()) {
+            userByUid = userRepository.findByEmailIgnoreCase(firebaseUid);
+        }
         log.info("MySQL user found for Firebase UID {}: {}", firebaseUid, userByUid.isPresent());
         User user = userByUid
                 .orElseThrow(() -> new ResourceNotFoundException("No application profile found for this user"));
