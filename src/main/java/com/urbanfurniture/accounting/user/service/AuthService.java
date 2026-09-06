@@ -1,6 +1,7 @@
 package com.urbanfurniture.accounting.user.service;
 
 import com.urbanfurniture.accounting.common.exception.ResourceNotFoundException;
+import com.urbanfurniture.accounting.common.exception.DuplicateResourceException;
 import com.urbanfurniture.accounting.user.dto.AuthMeResponse;
 import com.urbanfurniture.accounting.user.dto.CreateProfileRequest;
 import com.urbanfurniture.accounting.user.entity.User;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import com.urbanfurniture.accounting.config.JwtService;
 import com.urbanfurniture.accounting.user.dto.LoginRequest;
 import com.urbanfurniture.accounting.user.dto.LoginResponse;
@@ -30,18 +32,45 @@ public class AuthService {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
 
     public AuthService(UserRepository userRepository) {
-        this(userRepository, null, null);
+        this(userRepository, null, null, null);
     }
 
     @Autowired
     public AuthService(UserRepository userRepository,
                        AuthenticationManager authenticationManager,
-                       JwtService jwtService) {
+                       JwtService jwtService,
+                       PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Transactional
+    public LoginResponse register(com.urbanfurniture.accounting.user.dto.RegisterRequest request) {
+        String email = request.email().trim().toLowerCase(Locale.ROOT);
+        if (userRepository.findByEmailIgnoreCase(email).isPresent()) {
+            throw new DuplicateResourceException("An account with this email already exists");
+        }
+
+        User user = new User();
+        user.setName(request.name().trim());
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(request.password()));
+        user.setRole(Role.CUSTOMER);
+        user.setActive(true);
+        User saved = userRepository.save(user);
+
+        UserDetails details = org.springframework.security.core.userdetails.User
+                .withUsername(saved.getEmail())
+                .password(saved.getPassword())
+                .roles(saved.getRole().name())
+                .build();
+        String token = jwtService.generateToken(details, saved.getId(), saved.getRole().name());
+        return new LoginResponse(token, "Bearer", toAuthResponse(saved));
     }
 
     @Transactional(readOnly = true)
